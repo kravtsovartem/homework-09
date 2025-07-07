@@ -30,6 +30,7 @@ export const eventRouter = router({
           title: true,
           description: true,
           date: true,
+					author: true,
           participations: {
             select: {
               user: {
