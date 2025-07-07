@@ -4,9 +4,10 @@ import { CreateEventSchema } from "@/shared/api";
 
 type CreateEventFormProps = {
   onSubmit: (data: CreateEventSchema) => void;
+  onCancel: () => void;
 };
 
-export const CreateEventForm = ({ onSubmit }: CreateEventFormProps) => {
+export const CreateEventForm = ({ onSubmit, onCancel }: CreateEventFormProps) => {
   const {
     register,
     handleSubmit,
@@ -106,6 +107,7 @@ export const CreateEventForm = ({ onSubmit }: CreateEventFormProps) => {
         <button
           type="button"
           className="text-sm font-semibold leading-6 text-gray-900"
+					onClick={onCancel}
         >
           Отмена
         </button>
