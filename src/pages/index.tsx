@@ -1,4 +1,5 @@
 import { EventCard } from "@/entities/event";
+import { CancelEventButton } from "@/features/cancel-event";
 import { JoinEventButton } from "@/features/join-event";
 import { trpc } from "@/shared/api";
 
@@ -12,8 +13,10 @@ export default function Home() {
           <EventCard
             {...event}
             action={
-              !event.isJoined && (
+              !event.isJoined ? (
                 <JoinEventButton eventId={event.id} onSuccess={refetch} />
+              ) : (
+                <CancelEventButton eventId={event.id} onSuccess={refetch} />
               )
             }
           />
