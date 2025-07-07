@@ -1,7 +1,8 @@
 import { EventDetail } from "@/entities/event";
-import { trpc } from "@/shared/api";
+import { EditEventSchema, trpc } from "@/shared/api";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { EditEventForm } from "@/features/edit-event";
 
 export default function Event() {
   const router = useRouter();
@@ -11,7 +12,15 @@ export default function Event() {
     id: Number(router.query.id),
   });
 
-	const isAuthor = data?.author.id === session.data?.user.id
+  const { mutate } = trpc.event.edit.useMutation({
+    onSuccess: (data) => {
+      router.push(`/events/${data.id}`);
+    },
+  });
+
+  const handleSubmit = (data: EditEventSchema) => {
+    mutate(data);
+  };
 
   if (isLoading) {
     return "Loading...";
@@ -25,5 +34,11 @@ export default function Event() {
     return "No data";
   }
 
-  return <EventDetail {...data} isShowEditButton={isAuthor} />;
+  return (
+    <EditEventForm
+      {...data}
+      onSubmit={handleSubmit}
+      onCancel={() => router.replace(`/events/${data.id}`)}
+    />
+  );
 }

@@ -1,4 +1,4 @@
-import { CancelEventSchema, CreateEventSchema, JoinEventSchema } from "@/shared/api";
+import { CancelEventSchema, CreateEventSchema, EditEventSchema, JoinEventSchema } from "@/shared/api";
 import { prisma } from "../db";
 import { isAuth, procedure, router } from "../trpc";
 import { z } from "zod";
@@ -27,6 +27,7 @@ export const eventRouter = router({
 			return prisma.event.findUnique({
 				where: input,
 				select: {
+					id: true,
 					title: true,
 					description: true,
 					date: true,
@@ -76,6 +77,24 @@ export const eventRouter = router({
 						userId: user.id,
 					}
 				},
+			});
+		}),
+	edit: procedure
+		.input(EditEventSchema)
+		.use(isAuth)
+		.mutation(({ input, ctx: { user } }) => {
+
+			const { title, date, description } = input
+
+			return prisma.event.update({
+				where: {
+					id: input.id,
+				},
+				data: {
+					title,
+					date,
+					description
+				}
 			});
 		}),
 });
